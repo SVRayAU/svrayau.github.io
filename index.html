@@ -3,303 +3,234 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SkipVoteRay</title>
+    <title>SkipVoteRay - Content Creator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/feather-icons"></script>
-
-    <!-- Style block for custom styles and animations -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #121212; /* Matte Black */
-            color: #EAEAEA; /* Creamy off-white */
+            background-color: #111827; /* Reverted to the original dark gray-blue */
         }
-        .text-glow {
-            text-shadow: 0 0 12px rgba(236, 72, 153, 0.5);
-        }
-        .soft-shadow {
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-        }
-        
-        /* NEW: Video Background Style */
-        .hero-video-bg {
+        .hero-video-container {
             position: absolute;
-            top: 50%;
-            left: 50%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+        .hero-video {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transform: translate(-50%, -50%);
-            z-index: -1;
-            /* The blur and brightness effect */
-            filter: blur(8px) brightness(0.6);
+            filter: blur(8px);
+            transform: scale(1.1); /* To avoid blurred edges */
         }
-        
-        /* Fade-in on scroll animation */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s cubic-bezier(0.65, 0, 0.35, 1), transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+        .glassmorphism {
+            background: rgba(17, 24, 39, 0.75); /* Darker, sleeker glass effect */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        
-        /* Timeline styles (Kept in case you want to add it back) */
-        .timeline-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 3px;
-            height: 100%;
-            background-color: #374151; /* gray-700 */
+        .animate-fade-in-down {
+            animation: fadeInDown 1s ease-out forwards;
         }
-        .timeline-item {
-            position: relative;
-            width: 50%;
-            padding: 0 40px;
-        }
-        .timeline-item:nth-child(odd) {
-            left: 0;
-            padding-right: 20px;
-            text-align: right;
-        }
-        .timeline-item:nth-child(even) {
-            left: 50%;
-            padding-left: 20px;
-            text-align: left;
-        }
-        .timeline-dot {
-            content: '';
-            position: absolute;
-            top: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 15px;
-            height: 15px;
-            background-color: #EC4899; /* pink-500 */
-            border-radius: 50%;
-            z-index: 1;
-            box-shadow: 0 0 10px rgba(236, 72, 153, 0.7);
-        }
-        .timeline-item:nth-child(odd) .timeline-content {
-            float: right;
-        }
-
     </style>
 </head>
-<body class="text-gray-200">
+<body class="text-slate-300">
 
-    <!-- Header Navigation -->
-    <header class="bg-black bg-opacity-50 backdrop-blur-md sticky top-0 z-50 transition-all duration-300 border-b border-gray-800">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-             <a href="#">
-                <img src="assets/image.png" alt="SkipVoteRay Logo" 
-                     class="h-10 w-auto object-contain"
-                     onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
-                <span class="hidden h-10 leading-10 align-middle text-2xl font-bold text-white tracking-wider">
-                    Skip<span class="text-pink-500 text-glow">Vote</span>Ray
-                </span>
-            </a>
-            <div class="hidden md:flex space-x-6 items-center">
-                <a href="#latest" class="hover:text-pink-400 transition-colors duration-300">Latest</a>
-                <a href="#about" class="hover:text-pink-400 transition-colors duration-300">About</a>
-                <a href="#setup" class="hover:text-pink-400 transition-colors duration-300">Setup</a>
-                <a href="#community" class="hover:text-pink-400 transition-colors duration-300">Community</a>
+    <!-- Header -->
+    <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+        <nav class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <a href="#" class="flex items-center space-x-3">
+                    <!-- Make sure logo.png is in the same directory or update path -->
+                    <img src="logo.png" alt="SkipVoteRay Logo" class="h-10 w-10 rounded-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/40x40/1f2937/ffffff?text=SR';">
+                    <span class="text-xl font-bold text-white">SkipVoteRay</span>
+                </a>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#about" class="hover:text-white transition-colors duration-200">About</a>
+                    <a href="#videos" class="hover:text-white transition-colors duration-200">Videos</a>
+                    <a href="#community" class="hover:text-white transition-colors duration-200">Community</a>
+                    <a href="https://discord.gg/nQbUmAEPvX" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-white font-semibold py-2 px-6 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-slate-700/50">Join Discord</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-white focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
+                </div>
             </div>
-            <div class="md:hidden">
-                <button id="menu-btn" class="text-white focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-                </button>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden mt-4 glassmorphism rounded-lg p-2">
+                <a href="#about" class="block py-2 px-4 text-sm hover:bg-slate-700 rounded-md">About</a>
+                <a href="#videos" class="block py-2 px-4 text-sm hover:bg-slate-700 rounded-md">Videos</a>
+                <a href="#community" class="block py-2 px-4 text-sm hover:bg-slate-700 rounded-md">Community</a>
+                <a href="https://discord.gg/nQbUmAEPvX" target="_blank" class="block mt-2 text-center bg-slate-800 hover:bg-slate-700 text-white font-semibold py-2 px-4 rounded-full transition-all duration-200">Join Discord</a>
             </div>
         </nav>
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="md:hidden hidden px-6 pb-4 space-y-2">
-            <a href="#latest" class="block hover:text-pink-400 transition-colors duration-300">Latest</a>
-            <a href="#about" class="block hover:text-pink-400 transition-colors duration-300">About</a>
-            <a href="#setup" class="block hover:text-pink-400 transition-colors duration-300">Setup</a>
-            <a href="#community" class="block hover:text-pink-400 transition-colors duration-300">Community</a>
-        </div>
     </header>
 
+    <!-- Hero Section -->
     <main>
-        <!-- Hero Section -->
-        <section class="min-h-screen flex items-center justify-center relative overflow-hidden">
-            <!-- Video Background -->
-            <video autoplay loop muted playsinline class="hero-video-bg">
-                <source src="assets/gameplay-bg.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
+        <section class="relative h-screen flex items-center justify-center text-center text-white overflow-hidden">
+            <div class="hero-video-container">
+                <!-- Ensure assets/video.mp4 exists -->
+                <video autoplay loop muted playsinline class="hero-video">
+                    <source src="assets/video.mp4" type="video/mp4">
+                    Your browser does not support the video tag. A fallback image could go here.
+                </video>
+            </div>
+            <!-- Overlay -->
+            <div class="absolute inset-0 bg-black/60"></div>
 
-            <div class="text-center z-10 p-6">
-                <h1 class="text-5xl md:text-7xl font-black text-white mb-4">
-                    <span class="text-pink-500 text-glow">SkipVoteRay</span>
+            <div class="relative z-10 px-4">
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-4 tracking-tighter animate-fade-in-down">
+                    Master the Game with <span class="text-white">SkipVoteRay</span>
                 </h1>
-                <p class="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-8">
-                    Your daily dose of epic Among Us gameplay, helpful tutorials, and pure entertainment. Let's get gaming!
+                <p style="animation-delay: 200ms;" class="text-lg md:text-xl max-w-2xl mx-auto text-slate-300 animate-fade-in-down">
+                    Your number one source for Among Us tutorials, high-IQ plays, and hilarious entertainment. Join the crew and level up your gameplay.
                 </p>
-                <div class="flex justify-center items-center space-x-4">
-                    <a href="https://www.youtube.com/@SkipVoteRay" target="_blank" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg transition-transform duration-300 hover:scale-105 soft-shadow flex items-center">
-                        <i data-feather="youtube" class="mr-2"></i> Subscribe Now
-                    </a>
+                <div style="animation-delay: 400ms;" class="mt-8 flex justify-center gap-4 flex-wrap animate-fade-in-down">
+                    <a href="#videos" class="bg-white text-slate-900 font-bold py-3 px-8 rounded-full text-lg hover:bg-slate-200 transition-all duration-300 transform hover:scale-105 shadow-lg">Watch Now</a>
+                    <a href="#community" class="bg-transparent border-2 border-slate-500 text-slate-300 font-bold py-3 px-8 rounded-full text-lg hover:bg-slate-700 hover:text-white transition-all duration-300 transform hover:scale-105">Join The Mafia</a>
                 </div>
             </div>
         </section>
 
-        <!-- Latest Video Playlist Section -->
-        <section id="latest" class="py-24 bg-[#181818]">
-            <div class="container mx-auto px-6 text-center fade-in">
-                <h2 class="text-4xl font-bold text-white mb-4">Latest Videos</h2>
-                <p class="text-gray-400 mb-12 max-w-2xl mx-auto">Here's what's new on the channel.</p>
-                <div class="w-full max-w-4xl mx-auto aspect-video">
-                <iframe 
-                    src="https://www.youtube.com/embed/videoseries?list=PLDLdBYy1LfUaSH5ugVF9mDtdVsAxBtTmx"
-                    title="YouTube Playlist"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen
-                    class="w-full h-full">
-                </iframe>
-                </div>
-            </div>
-        </section>
-        
-        <!-- About Me Section -->
-        <section id="about" class="py-24 bg-[#121212]">
+        <!-- About Section -->
+        <section id="about" class="py-20 sm:py-32">
             <div class="container mx-auto px-6">
-                <div class="flex flex-col md:flex-row items-center gap-12 max-w-4xl mx-auto fade-in">
-                    <div class="md:w-1/3 text-center">
-                        <img src="assets/image.png" alt="SkipVoteRay" class="rounded-full w-48 h-48 md:w-64 md:h-64 mx-auto object-cover border-4 border-red-500 soft-shadow">
-                    </div>
-                    <div class="md:w-2/3 text-center md:text-left">
-                        <h2 class="text-4xl font-bold text-white mb-4">Hey, I'm SkipVoteRay!</h2>
-                        <p class="text-gray-300 leading-relaxed mb-4">
-                            I started my YouTube journey out of a passion for gaming and making people laugh. What began as a fun hobby has turned into an amazing community of fellow gamers and friends.
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="text-center md:text-left">
+                        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Who is SkipVoteRay?</h2>
+                        <p class="mb-4 leading-relaxed">
+                            Hey, I'm SkipVoteRay! I'm an Among Us content creator dedicated to helping you become a better player while having a ton of fun. From detailed imposter guides to crewmate strategies, my channel is packed with tips and tricks.
                         </p>
-                        <p class="text-gray-300 leading-relaxed">
-                            My channel is all about having a good time, whether we're catching impostors in Among Us, learning new game mechanics, or just exploring random entertaining games. Thanks for being part of the crew!
+                        <p class="leading-relaxed">
+                            But it's not all serious! I also create entertainment videos, funny moments, and unique challenges to keep you on the edge of your seat. My goal is to build a fun, engaging, and slightly sus community.
                         </p>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- My Setup Section -->
-        <section id="setup" class="py-24 bg-[#181818]">
-            <div class="container mx-auto px-6 text-center fade-in">
-                <h2 class="text-4xl font-bold text-white mb-4">My Setup</h2>
-                <p class="text-gray-400 mb-12 max-w-2xl mx-auto">Curious about the gear I use to create my videos? Here’s a peek behind the scenes.</p>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                    <!-- Gaming Rig -->
-                    <div class="bg-gray-800 p-8 rounded-xl soft-shadow text-left">
-                        <div class="flex items-center mb-4">
-                            <i data-feather="hard-drive" class="w-8 h-8 text-pink-400"></i>
-                            <h3 class="font-bold text-2xl text-white ml-4">Gaming Rig</h3>
+                    <div class="flex justify-center">
+                        <div class="w-full max-w-sm glassmorphism rounded-2xl p-8 shadow-2xl shadow-black/20">
+                            <img src="logo.png" alt="SkipVoteRay Logo" class="h-40 w-40 rounded-full object-cover mx-auto mb-6 border-4 border-slate-700 shadow-lg" onerror="this.onerror=null; this.src='https://placehold.co/160x160/1f2937/ffffff?text=SR';">
+                            <div class="text-center">
+                                <h3 class="text-2xl font-bold text-white">SkipVoteRay</h3>
+                                <p class="text-slate-400">Among Us YouTuber</p>
+                                <div class="mt-4 flex justify-center space-x-4">
+                                    <a href="#" class="text-slate-400 hover:text-white transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M21.582,6.186c-0.23-0.86-0.908-1.538-1.768-1.768C18.254,4,12,4,12,4S5.746,4,4.186,4.418 c-0.86,0.23-1.538,0.908-1.768,1.768C2,7.746,2,12,2,12s0,4.254,0.418,5.814c0.23,0.86,0.908,1.538,1.768,1.768 C5.746,20,12,20,12,20s6.254,0,7.814-0.418c0.861-0.23,1.538-0.908,1.768-1.768C22,16.254,22,12,22,12S22,7.746,21.582,6.186z M10,15.464V8.536L16,12L10,15.464z"></path></svg></a>
+                                    <a href="#" class="text-slate-400 hover:text-white transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616v.064c0 2.298 1.634 4.212 3.793 4.649-.65.177-1.354.23-2.06.088.625 1.943 2.41 3.26 4.54 3.3-1.62 1.27-3.66 2.02-5.88 2.02-.38 0-.75-.02-1.12-.06 2.08 1.34 4.56 2.12 7.24 2.12 8.68 0 13.43-7.2 13.43-13.43 0-.2 0-.41-.01-.61.92-.66 1.72-1.5 2.36-2.45z"></path></svg></a>
+                                </div>
+                            </div>
                         </div>
-                        <ul class="space-y-2 text-gray-400 list-disc list-inside">
-                            <li>CPU: Intel i3-1115G4 11th Gen</li>
-                            <li>GPU: Integrated GPU</li>
-                            <li>RAM: 8GB DDR4</li>
-                            <li>Motherboard: I don't know</li>
-                        </ul>
-                    </div>
-                     <!-- Peripherals -->
-                    <div class="bg-gray-800 p-8 rounded-xl soft-shadow text-left">
-                         <div class="flex items-center mb-4">
-                            <i data-feather="mic" class="w-8 h-8 text-pink-400"></i>
-                            <h3 class="font-bold text-2xl text-white ml-4">Audio & Video</h3>
-                        </div>
-                        <ul class="space-y-2 text-gray-400 list-disc list-inside">
-                            <li>Microphone: Laptop Mic</li>
-                            <li>Interface: I'm broke</li>
-                            <li>Headphones: Don't have</li>
-                            <li>Webcam: I have, don't use it</li>
-                        </ul>
-                    </div>
-                     <!-- Software -->
-                    <div class="bg-gray-800 p-8 rounded-xl soft-shadow text-left">
-                         <div class="flex items-center mb-4">
-                            <i data-feather="edit" class="w-8 h-8 text-pink-400"></i>
-                            <h3 class="font-bold text-2xl text-white ml-4">Software</h3>
-                        </div>
-                        <ul class="space-y-2 text-gray-400 list-disc list-inside">
-                            <li>Recording: OBS Studio</li>
-                            <li>Editing: Adobe Premiere Pro</li>
-                            <li>Thumbnails: Adobe Photoshop</li>
-                            <li>Audio: Audacity</li>
-                        </ul>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Community Hub Section -->
-        <section id="community" class="py-24 bg-[#121212]">
-            <div class="container mx-auto px-6 text-center fade-in">
-                <h2 class="text-4xl font-bold text-white mb-4">Join The Crew</h2>
-                <p class="text-gray-400 mb-10 max-w-2xl mx-auto">The conversation doesn't end on YouTube. Join our Discord server to hang out, play games, and be part of the community!</p>
-                <a href="https://discord.gg/nQbUmAEPvX" target="_blank" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-10 rounded-lg transition-all duration-300 hover:scale-105 soft-shadow inline-block text-lg mb-12">
-                    Join the Discord Server
-                </a>
-                <div class="flex justify-center space-x-8">
-                     <a href="#" class="text-gray-400 hover:text-pink-500 transition-transform duration-300 hover:scale-110 transform hover:-translate-y-1">
-                        <i data-feather="twitter" class="w-8 h-8"></i>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-pink-500 transition-transform duration-300 hover:scale-110 transform hover:-translate-y-1">
-                        <i data-feather="instagram" class="w-8 h-8"></i>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-pink-500 transition-transform duration-300 hover:scale-110 transform hover:-translate-y-1">
-                        <i data-feather="twitch" class="w-8 h-8"></i>
-                    </a>
+        <!-- Videos Section -->
+        <section id="videos" class="py-20 sm:py-32 bg-slate-900/50">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-white">Latest Content</h2>
+                    <p class="mt-2 text-lg text-slate-400">Check out my most recent videos!</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Video Card 1 -->
+                    <div class="glassmorphism rounded-xl overflow-hidden group transition-all duration-500 ease-in-out transform hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/30">
+                        <img src="https://placehold.co/1280x720/1f2937/9ca3af?text=Among+Us+Tutorial" alt="Video Thumbnail" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-white mb-2">The Ultimate Imposter Guide</h3>
+                            <p class="text-slate-400 text-sm">Learn the best strategies to win every game as the imposter. We cover venting, sabotages, and framing like a pro.</p>
+                        </div>
+                    </div>
+                    <!-- Video Card 2 -->
+                    <div class="glassmorphism rounded-xl overflow-hidden group transition-all duration-500 ease-in-out transform hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/30">
+                        <img src="https://placehold.co/1280x720/1f2937/9ca3af?text=Funny+Moments" alt="Video Thumbnail" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-white mb-2">Among Us Funny Moments #23</h3>
+                            <p class="text-slate-400 text-sm">A compilation of the most hilarious and unexpected moments from my recent streams with the SussyGang Mafia.</p>
+                        </div>
+                    </div>
+                    <!-- Video Card 3 -->
+                    <div class="glassmorphism rounded-xl overflow-hidden group transition-all duration-500 ease-in-out transform hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/30">
+                        <img src="https://placehold.co/1280x720/1f2937/9ca3af?text=IQ+Plays" alt="Video Thumbnail" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-white mb-2">1000 IQ Crewmate Plays</h3>
+                            <p class="text-slate-400 text-sm">Watch me outsmart imposters with logic and deduction. These are the plays that will make you a detective master.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Footer -->
-        <footer class="bg-[#121212] border-t border-gray-900">
-            <div class="container mx-auto px-6 py-8 text-center text-gray-600 text-sm">
-                <p>&copy; 2025 SkipVoteRay. All Rights Reserved.</p>
+        <!-- Community Section -->
+        <section id="community" class="py-20 sm:py-32">
+            <div class="container mx-auto px-6">
+                <div class="glassmorphism rounded-2xl p-8 sm:p-12 text-center max-w-4xl mx-auto shadow-2xl shadow-black/20">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Join the <span class="text-white">SussyGang Mafia</span></h2>
+                    <p class="text-lg text-slate-300 max-w-2xl mx-auto mb-8 leading-relaxed">
+                        Our community is the heart of everything. Join our official Discord server to chat with me, find people to play with, participate in events, and get notified about new videos and streams first!
+                    </p>
+                    <a href="https://discord.gg/nQbUmAEPvX" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-white font-bold py-4 px-10 rounded-full text-lg transition-all duration-300 transform hover:scale-105 inline-block shadow-lg hover:shadow-slate-700/50">Join the Server</a>
+                </div>
             </div>
-        </footer>
+        </section>
+
     </main>
 
-    <script>
-        // Feather Icons
-        feather.replace();
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800">
+        <div class="container mx-auto px-6 py-8 text-center text-slate-400">
+            <p>&copy; 2024 SkipVoteRay. All Rights Reserved.</p>
+            <p class="text-sm mt-1">Website designed with ❤️</p>
+        </div>
+    </footer>
 
-        // Mobile Menu Toggle
-        const menuBtn = document.getElementById('menu-btn');
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
-        menuBtn.addEventListener('click', () => {
+
+        mobileMenuButton.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
         });
 
-        // Close mobile menu on link click
-        document.querySelectorAll('#mobile-menu a').forEach(link => {
-            link.addEventListener('click', () => {
+        // Close mobile menu when a link is clicked
+        const mobileMenuLinks = mobileMenu.getElementsByTagName('a');
+        for (let i = 0; i < mobileMenuLinks.length; i++) {
+            mobileMenuLinks[i].addEventListener('click', () => {
                 mobileMenu.classList.add('hidden');
             });
-        });
-        
-        // Fade-in on scroll observer
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, {
-            threshold: 0.1
-        });
+        }
 
-        const fadeElements = document.querySelectorAll('.fade-in');
-        fadeElements.forEach((el) => observer.observe(el));
+        // Header background on scroll
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('bg-slate-900/80', 'backdrop-blur-sm', 'shadow-lg');
+            } else {
+                header.classList.remove('bg-slate-900/80', 'backdrop-blur-sm', 'shadow-lg');
+            }
+        });
     </script>
 </body>
 </html>
